@@ -172,7 +172,7 @@
         <div class="match">82% Match</div>
         <div class="salary">$180,000 – $230,000</div>
         <div class="reason">
-          Strong overlap with Google’s IC growth trajectory. Your background aligns well with
+          Strong overlap with Google's IC growth trajectory. Your background aligns well with
           teams that value system design, code quality, and cross-team collaboration.
         </div>
       </div>
@@ -189,7 +189,7 @@
         <div class="match">74% Match</div>
         <div class="salary">$160,000 – $210,000</div>
         <div class="reason">
-          Experience maps well to Amazon’s ownership-driven culture. You show signals
+          Experience maps well to Amazon's ownership-driven culture. You show signals
           aligned with senior IC expectations in execution and delivery.
         </div>
       </div>
@@ -207,7 +207,7 @@
         <div class="salary">$170,000 – $220,000</div>
         <div class="reason">
           Profile matches fast-moving product teams. Strength in end-to-end ownership and
-          pragmatic engineering fits DoorDash’s execution-heavy environment.
+          pragmatic engineering fits DoorDash's execution-heavy environment.
         </div>
       </div>
 
@@ -223,42 +223,97 @@
 
 <script>
 async function showResults() {
-  const input = document.querySelector("input").value;
+  const input = document.querySelector("input").value.trim();
+  const container = document.getElementById("results");
 
-  const res = await fetch(
-    "https://whowouldhireme-api.akkiex007.workers.dev/",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ profile: input })
-    }
-  );
-
-  const data = await res.json();
-
-  let parsed;
-  try {
-    parsed = JSON.parse(data.result);
-  } catch (e) {
-    alert("AI response parsing failed");
+  // Validation
+  if (!input) {
+    alert("Please enter a LinkedIn, GitHub, or Twitter URL");
     return;
   }
 
-  const container = document.getElementById("results");
-  container.innerHTML = "<h3>Top Company Matches</h3>";
+  // Show loading state
+  container.innerHTML = "<h3>Analyzing your profile...</h3>";
+  container.style.display = "block";
 
-  parsed.companies.forEach(c => {
+  try {
+    const res = await fetch(
+      "https://whowouldhireme-api.akkiex007.workers.dev/",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ profile: input })
+      }
+    );
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error("Server error:", errorText);
+      throw new Error(`Server error: ${res.status}`);
+    }
+
+    const data = await res.json();
+    console.log("Response data:", data);
+
+    // Parse the result
+    let parsed;
+    try {
+      parsed = JSON.parse(data.result);
+    } catch (e) {
+      console.error("Parse error:", e);
+      console.error("Raw result:", data.result);
+      throw new Error("AI response parsing failed");
+    }
+
+    if (!parsed.companies || parsed.companies.length === 0) {
+      container.innerHTML = "<h3>No matching companies found. Please try a different profile.</h3>";
+      return;
+    }
+
+    // Display results with proper styling
+    container.innerHTML = "<h3>Top Company Matches</h3>";
+
+    parsed.companies.forEach(c => {
+      const initial = c.name.charAt(0).toUpperCase();
+      container.innerHTML += `
+        <div class="results-card">
+          <div class="card-header">
+            <div class="logo-badge">${initial}</div>
+            <div>
+              <div class="company">${c.name}</div>
+              <div class="role">${c.role}</div>
+            </div>
+          </div>
+          <div class="match">${c.match}% Match</div>
+          <div class="salary">${c.salary}</div>
+          <div class="reason">${c.reason}</div>
+        </div>
+      `;
+    });
+
     container.innerHTML += `
-      <div class="results-card">
-        <div class="company">${c.name}</div>
-        <div class="match">${c.match}% Match</div>
-        <div class="salary">${c.salary}</div>
-        <p>${c.reason}</p>
+      <div class="note">
+        Results are indicative and based on historical hiring patterns.
+      </div>
+      <div class="share">
+        🔗 Share this result
       </div>
     `;
-  });
 
-  container.style.display = "block";
+  } catch (error) {
+    console.error("Error:", error);
+    container.innerHTML = `
+      <h3 style="color: #dc2626;">Error</h3>
+      <div class="results-card">
+        <p style="color: #dc2626; margin: 0;">
+          ${error.message}
+        </p>
+        <p style="margin-top: 12px; font-size: 13px; color: #6b7280;">
+          Please check the console for more details or try again.
+        </p>
+      </div>
+    `;
+  }
 }
 </script>
 
