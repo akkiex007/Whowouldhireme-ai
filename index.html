@@ -221,10 +221,46 @@
     </div>
   </div>
 
-  <script>
-    function showResults() {
-      document.getElementById("results").style.display = "block";
+<script>
+async function showResults() {
+  const input = document.querySelector("input").value;
+
+  const res = await fetch(
+    "https://whowouldhireme-api.akkiex007.workers.dev/",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ profile: input })
     }
-  </script>
+  );
+
+  const data = await res.json();
+
+  let parsed;
+  try {
+    parsed = JSON.parse(data.result);
+  } catch (e) {
+    alert("AI response parsing failed");
+    return;
+  }
+
+  const container = document.getElementById("results");
+  container.innerHTML = "<h3>Top Company Matches</h3>";
+
+  parsed.companies.forEach(c => {
+    container.innerHTML += `
+      <div class="results-card">
+        <div class="company">${c.name}</div>
+        <div class="match">${c.match}% Match</div>
+        <div class="salary">${c.salary}</div>
+        <p>${c.reason}</p>
+      </div>
+    `;
+  });
+
+  container.style.display = "block";
+}
+</script>
+
 </body>
 </html>
