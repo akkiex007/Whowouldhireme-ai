@@ -48,10 +48,32 @@
   <div class="box">
     <h1>Who Would Hire Me?</h1>
     <input placeholder="Paste LinkedIn / GitHub / Twitter URL" />
-    <button>Analyze</button>
-    <p class="note">
-      Coming soon: Company match, salary range & recommendations.
-    </p>
+    <button onclick="showResults()">Analyze</button>
+
+<div id="results" style="display:none; margin-top:20px;">
+  <hr style="margin:20px 0;" />
+
+  <h3>Top Matches</h3>
+
+  <p><strong>Google</strong> — 82% match<br/>
+  💰 $180,000 – $230,000</p>
+
+  <p><strong>Amazon</strong> — 74% match<br/>
+  💰 $160,000 – $210,000</p>
+
+  <p><strong>DoorDash</strong> — 68% match<br/>
+  💰 $170,000 – $220,000</p>
+
+  <p class="note">
+    These are sample results. Real analysis coming soon.
+  </p>
+</div>
+
   </div>
+<script>
+  function showResults() {
+    document.getElementById("results").style.display = "block";
+  }
+</script>
 </body>
 </html>
