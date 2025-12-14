@@ -37,11 +37,30 @@
       border-radius: 5px;
       cursor: pointer;
     }
-    .note {
-      font-size: 12px;
-      margin-top: 10px;
-      color: gray;
-    }
+    .results-card {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.company {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.match {
+  color: #16a34a;
+  font-weight: bold;
+}
+
+.salary {
+  margin-top: 4px;
+  color: #4f46e5;
+  font-weight: bold;
+}
+
   </style>
 </head>
 <body>
@@ -51,23 +70,31 @@
     <button onclick="showResults()">Analyze</button>
 
 <div id="results" style="display:none; margin-top:20px;">
-  <hr style="margin:20px 0;" />
+  <h3>Top Company Matches</h3>
 
-  <h3>Top Matches</h3>
+  <div class="results-card">
+    <div class="company">Google</div>
+    <div class="match">82% Match</div>
+    <div class="salary">$180,000 – $230,000</div>
+  </div>
 
-  <p><strong>Google</strong> — 82% match<br/>
-  💰 $180,000 – $230,000</p>
+  <div class="results-card">
+    <div class="company">Amazon</div>
+    <div class="match">74% Match</div>
+    <div class="salary">$160,000 – $210,000</div>
+  </div>
 
-  <p><strong>Amazon</strong> — 74% match<br/>
-  💰 $160,000 – $210,000</p>
-
-  <p><strong>DoorDash</strong> — 68% match<br/>
-  💰 $170,000 – $220,000</p>
+  <div class="results-card">
+    <div class="company">DoorDash</div>
+    <div class="match">68% Match</div>
+    <div class="salary">$170,000 – $220,000</div>
+  </div>
 
   <p class="note">
-    These are sample results. Real analysis coming soon.
+    Sample results shown for demonstration.
   </p>
 </div>
+
 
   </div>
 <script>
