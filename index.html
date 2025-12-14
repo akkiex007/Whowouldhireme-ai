@@ -1,106 +1,230 @@
-
 <!DOCTYPE html>
 <html>
 <head>
   <title>Who Would Hire Me</title>
+
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f5f7fb;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f6f7fb;
       display: flex;
       justify-content: center;
-      align-items: center;
-      height: 100vh;
+      padding: 60px 0;
     }
+
     .box {
       background: white;
-      padding: 30px;
-      border-radius: 10px;
-      width: 400px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      padding: 32px;
+      width: 440px;
+      border-radius: 18px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.08);
     }
+
     h1 {
-      text-align: center;
+      margin-bottom: 6px;
+      font-size: 26px;
     }
+
+    .subtitle {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 22px;
+    }
+
     input {
       width: 100%;
-      padding: 10px;
-      margin-top: 10px;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 12px;
+      font-size: 14px;
     }
+
     button {
-      margin-top: 15px;
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       background: #4f46e5;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    button:hover {
+      background: #4338ca;
+    }
+
+    #results {
+      margin-top: 30px;
+    }
+
+    h3 {
+      margin-bottom: 14px;
+      font-size: 16px;
+    }
+
+    .results-card {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+      transition: 0.2s ease;
+    }
+
+    .results-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .logo-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #111827;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 12px;
+      font-size: 16px;
+    }
+
+    .company {
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .role {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+
+    .match {
+      color: #16a34a;
+      font-weight: bold;
+      font-size: 14px;
+      margin-top: 6px;
+    }
+
+    .salary {
+      color: #4f46e5;
+      font-weight: bold;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .reason {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #374151;
+      line-height: 1.4;
+    }
+
+    .note {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 14px;
+      text-align: center;
+    }
+
+    .share {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 13px;
+      color: #4f46e5;
       cursor: pointer;
     }
-    .results-card {
-  background: #f9fafb;
-  border-radius: 12px;
-  padding: 16px;
-  margin-top: 12px;
-  border: 1px solid #e5e7eb;
-}
-
-.company {
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.match {
-  color: #16a34a;
-  font-weight: bold;
-}
-
-.salary {
-  margin-top: 4px;
-  color: #4f46e5;
-  font-weight: bold;
-}
-
   </style>
 </head>
+
 <body>
   <div class="box">
     <h1>Who Would Hire Me?</h1>
+    <div class="subtitle">
+      Discover which top tech companies fit your profile — and at what level.
+    </div>
+
     <input placeholder="Paste LinkedIn / GitHub / Twitter URL" />
     <button onclick="showResults()">Analyze</button>
 
-<div id="results" style="display:none; margin-top:20px;">
-  <h3>Top Company Matches</h3>
+    <div id="results" style="display:none;">
+      <h3>Top Company Matches</h3>
 
-  <div class="results-card">
-    <div class="company">Google</div>
-    <div class="match">82% Match</div>
-    <div class="salary">$180,000 – $230,000</div>
+      <!-- Google -->
+      <div class="results-card">
+        <div class="card-header">
+          <div class="logo-badge">G</div>
+          <div>
+            <div class="company">Google</div>
+            <div class="role">Software Engineer — L4</div>
+          </div>
+        </div>
+        <div class="match">82% Match</div>
+        <div class="salary">$180,000 – $230,000</div>
+        <div class="reason">
+          Strong overlap with Google’s IC growth trajectory. Your background aligns well with
+          teams that value system design, code quality, and cross-team collaboration.
+        </div>
+      </div>
+
+      <!-- Amazon -->
+      <div class="results-card">
+        <div class="card-header">
+          <div class="logo-badge">A</div>
+          <div>
+            <div class="company">Amazon</div>
+            <div class="role">Software Engineer — L5</div>
+          </div>
+        </div>
+        <div class="match">74% Match</div>
+        <div class="salary">$160,000 – $210,000</div>
+        <div class="reason">
+          Experience maps well to Amazon’s ownership-driven culture. You show signals
+          aligned with senior IC expectations in execution and delivery.
+        </div>
+      </div>
+
+      <!-- DoorDash -->
+      <div class="results-card">
+        <div class="card-header">
+          <div class="logo-badge">D</div>
+          <div>
+            <div class="company">DoorDash</div>
+            <div class="role">Senior Software Engineer</div>
+          </div>
+        </div>
+        <div class="match">68% Match</div>
+        <div class="salary">$170,000 – $220,000</div>
+        <div class="reason">
+          Profile matches fast-moving product teams. Strength in end-to-end ownership and
+          pragmatic engineering fits DoorDash’s execution-heavy environment.
+        </div>
+      </div>
+
+      <div class="note">
+        Results are indicative and based on historical hiring patterns.
+      </div>
+
+      <div class="share">
+        🔗 Share this result
+      </div>
+    </div>
   </div>
 
-  <div class="results-card">
-    <div class="company">Amazon</div>
-    <div class="match">74% Match</div>
-    <div class="salary">$160,000 – $210,000</div>
-  </div>
-
-  <div class="results-card">
-    <div class="company">DoorDash</div>
-    <div class="match">68% Match</div>
-    <div class="salary">$170,000 – $220,000</div>
-  </div>
-
-  <p class="note">
-    Sample results shown for demonstration.
-  </p>
-</div>
-
-
-  </div>
-<script>
-  function showResults() {
-    document.getElementById("results").style.display = "block";
-  }
-</script>
+  <script>
+    function showResults() {
+      document.getElementById("results").style.display = "block";
+    }
+  </script>
 </body>
 </html>
