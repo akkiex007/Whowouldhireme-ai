@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Who Would Hire Me?</title>
-
   <style>
     body {
       margin: 0;
@@ -14,7 +13,6 @@
       justify-content: center;
       padding: 40px;
     }
-
     .card {
       width: 420px;
       background: white;
@@ -22,7 +20,6 @@
       border-radius: 12px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     }
-
     input {
       width: 100%;
       padding: 14px;
@@ -30,7 +27,6 @@
       border: 1px solid #ccc;
       font-size: 1rem;
     }
-
     button {
       margin-top: 14px;
       width: 100%;
@@ -42,11 +38,6 @@
       border-radius: 8px;
       cursor: pointer;
     }
-
-    button:hover {
-      background: #4637c4;
-    }
-
     .result-card {
       margin-top: 20px;
       padding: 20px;
@@ -54,7 +45,6 @@
       border-radius: 10px;
       border-left: 4px solid #5b48ea;
     }
-
     .error {
       color: red;
       font-weight: bold;
@@ -62,27 +52,27 @@
     }
   </style>
 </head>
-
 <body>
   <div class="card">
     <h2>Who Would Hire Me?</h2>
-    <p>Enter your LinkedIn URL:</p>
 
+    <p>Enter your LinkedIn URL:</p>
     <input id="profileInput" placeholder="https://www.linkedin.com/in/akkiex007/" />
 
-    <button onclick="showResults()">Analyze</button>
+    <button onclick="analyze()">Analyze</button>
+
     <div id="output"></div>
   </div>
 
   <script>
-    async function showResults() {
+    async function analyze() {
       const profile = document.getElementById("profileInput").value.trim();
       const output = document.getElementById("output");
 
       output.innerHTML = "<p>Loading...</p>";
 
       try {
-        const response = await fetch(
+        const res = await fetch(
           "https://whowouldhireme-api.akkiex007.workers.dev/",
           {
             method: "POST",
@@ -91,37 +81,15 @@
           }
         );
 
-        const data = await response.json();
-        console.log("Response:", data);
+        const data = await res.json();
+        console.log("Raw Worker Response:", data);
 
-        // FIX: Handle old + new worker formats
-        let parsed;
-
-        if (typeof data.result === "string") {
-          try {
-            parsed = JSON.parse(data.result);
-          } catch (e) {
-            console.error("JSON parse error:", e, data.result);
-            output.innerHTML = `
-              <p class="error">AI returned invalid JSON</p>
-            `;
-            return;
-          }
-        } else if (data.companies) {
-          parsed = data;
-        } else {
-          output.innerHTML = `
-            <p class="error">AI response parsing failed</p>
-          `;
+        if (!data.companies || !Array.isArray(data.companies)) {
+          output.innerHTML = `<p class="error">AI returned invalid JSON</p>`;
           return;
         }
 
-        if (!parsed.companies || parsed.companies.length === 0) {
-          output.innerHTML = `<p class="error">No companies returned.</p>`;
-          return;
-        }
-
-        const c = parsed.companies[0];
+        const c = data.companies[0];
 
         output.innerHTML = `
           <div class="result-card">
