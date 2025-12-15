@@ -14,6 +14,7 @@
       justify-content: center;
       padding: 40px;
     }
+
     .card {
       width: 420px;
       background: white;
@@ -21,6 +22,7 @@
       border-radius: 12px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     }
+
     input {
       width: 100%;
       padding: 14px;
@@ -28,6 +30,7 @@
       border: 1px solid #ccc;
       font-size: 1rem;
     }
+
     button {
       margin-top: 14px;
       width: 100%;
@@ -39,9 +42,11 @@
       border-radius: 8px;
       cursor: pointer;
     }
+
     button:hover {
       background: #4637c4;
     }
+
     .result-card {
       margin-top: 20px;
       padding: 20px;
@@ -49,6 +54,7 @@
       border-radius: 10px;
       border-left: 4px solid #5b48ea;
     }
+
     .error {
       color: red;
       font-weight: bold;
@@ -63,11 +69,10 @@
     <p>Enter your LinkedIn URL:</p>
 
     <input id="profileInput" placeholder="https://www.linkedin.com/in/akkiex007/" />
-    <button onclick="showResults()">Analyze</button>
 
+    <button onclick="showResults()">Analyze</button>
     <div id="output"></div>
   </div>
-
 
   <script>
     async function showResults() {
@@ -77,44 +82,42 @@
       output.innerHTML = "<p>Loading...</p>";
 
       try {
-        const response = await fetch("https://whowouldhireme-api.akkiex007.workers.dev/", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ profile })
-        });
+        const response = await fetch(
+          "https://whowouldhireme-api.akkiex007.workers.dev/",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ profile })
+          }
+        );
 
         const data = await response.json();
-        console.log("Raw Worker Response:", data);
+        console.log("Response:", data);
 
-        let parsed = null;
+        // FIX: Handle old + new worker formats
+        let parsed;
 
-        // Worker may return:
-        //  1. { companies: [...] }
-        //  2. { result: "JSON STRING" }
-        //  3. { error: "...", companies: [...] }
-        //  4. bad JSON → caught
-
-        if (data.companies) {
-          parsed = data;
-        } else if (typeof data.result === "string") {
+        if (typeof data.result === "string") {
           try {
             parsed = JSON.parse(data.result);
           } catch (e) {
-            console.error("Failed to parse AI JSON:", data.result);
+            console.error("JSON parse error:", e, data.result);
             output.innerHTML = `
-              <div class="error">AI returned invalid JSON</div>
-              <p>Raw: ${data.result}</p>
+              <p class="error">AI returned invalid JSON</p>
             `;
             return;
           }
+        } else if (data.companies) {
+          parsed = data;
         } else {
-          output.innerHTML = `<p class="error">Unexpected API response</p>`;
+          output.innerHTML = `
+            <p class="error">AI response parsing failed</p>
+          `;
           return;
         }
 
-        // Validate companies array
-        if (!parsed.companies || !Array.isArray(parsed.companies)) {
-          output.innerHTML = `<p class="error">Invalid response format</p>`;
+        if (!parsed.companies || parsed.companies.length === 0) {
+          output.innerHTML = `<p class="error">No companies returned.</p>`;
           return;
         }
 
@@ -129,14 +132,11 @@
             <p>${c.reason}</p>
           </div>
         `;
-      }
-
-      catch (err) {
-        console.error("Frontend error:", err);
-        output.innerHTML = `<p class="error">Request failed — check console.</p>`;
+      } catch (err) {
+        console.error(err);
+        output.innerHTML = `<p class="error">Request failed. Check console.</p>`;
       }
     }
   </script>
-
 </body>
 </html>
